@@ -4,6 +4,8 @@ A configurable, privacy-safe generator for evidence-grounded Chinese industry mo
 
 The application creates drafts only. Every report must be reviewed by a person before publication.
 
+Current version: `0.2.0`.
+
 ## Safety defaults
 
 - API keys are read from environment variables and redacted from logs.
@@ -52,10 +54,19 @@ Drafts appear under `data/reports/`. Review every fact, number, company name, da
 Other commands:
 
 ```powershell
+python -m morning_report --version
 python -m morning_report collect
 python -m morning_report generate
 python -m morning_report cleanup --days 30
 ```
+
+After a reviewer saves the final copy, optional anonymized quality metrics can be recorded:
+
+```powershell
+python -m morning_report record-review --draft data/reports/draft.md --final path/to/reviewed.md --rating 4 --category factual --category source
+```
+
+The metrics file contains timestamps, counts, ratings, similarity, and SHA-256 digests. It does not contain report text, source URLs, or review notes.
 
 ## Configure another industry
 
@@ -70,7 +81,7 @@ python -m morning_report run --dry-run
 The bundled Skill can also create a safe starter profile:
 
 ```powershell
-python skills/industry-morning-report/scripts/create_profile.py semiconductor "半导体行业" --keyword 半导体 --keyword semiconductor
+python .agents/skills/industry-morning-report/scripts/create_profile.py semiconductor "半导体行业" --keyword 半导体 --keyword semiconductor
 ```
 
 Replace the placeholder feed before running it.
@@ -91,10 +102,22 @@ The task uses a 20-minute runner timeout, prevents overlapping application runs,
 
 ```powershell
 python -m unittest discover -s tests -v
-python skills/industry-morning-report/scripts/privacy_scan.py .
-python C:\path\to\skill-creator\scripts\quick_validate.py skills/industry-morning-report
+python .agents/skills/industry-morning-report-maintainer/scripts/privacy_scan.py . --history
+python C:\path\to\skill-creator\scripts\quick_validate.py .agents/skills/industry-morning-report
+python C:\path\to\skill-creator\scripts\quick_validate.py .agents/skills/industry-morning-report-maintainer
 ```
+
+The privacy scan recognizes common secret formats, credential assignments, private keys, personal Windows paths, forbidden runtime files, exact staged content, and reachable Git history. It is a defensive check, not proof that no private data exists; a human must still review the staged diff and repository history before publishing.
+
+## Use with Codex
+
+The repository contains two repository-scoped Skills. Open the cloned repository as the current workspace so Codex can discover them automatically:
+
+- `$industry-morning-report` handles setup, profiles, dry runs, generation, diagnosis, and human review.
+- `$industry-morning-report-maintainer` handles code changes, tests, privacy audits, CI, pull requests, and releases.
+
+Both Skills locate the project from the current Git worktree, so they do not assume a particular folder on a teammate's computer. A repository-scoped Skill updates when the teammate pulls the repository. A separately copied global Skill does not update automatically and must be reinstalled explicitly.
 
 ## Team workflow
 
-The project uses the MIT license, so teammates may modify their own copies. Protect the official default branch in GitHub with required pull requests, required owner approval, and required tests. Remote governance is configured only after the repository owner approves upload.
+The project uses the MIT license, so teammates may use, modify, and redistribute their own copies while keeping the license notice. Prepare changes on a feature branch, run the tests and privacy checks, and submit a pull request. Keep the official default branch protected with required pull requests, owner review, and required tests.

@@ -6,6 +6,7 @@
 2. Confirm the command exited successfully and a new draft exists.
 3. Review the draft manually.
 4. Publish only after the reviewer approves it.
+5. If quality tracking is enabled, record anonymized metrics from the draft and final file; never store review notes in the metrics command.
 
 ## Mandatory review
 
@@ -25,6 +26,14 @@ For the complete report, verify:
 - there is no unsupported forecast or fabricated specificity;
 - the final key-signal line reflects the evidence;
 - Markdown links and formatting are intact.
+
+Optionally record the result after review:
+
+```powershell
+python -m morning_report record-review --draft <draft.md> --final <reviewed.md> --rating 1-5 --category factual
+```
+
+Allowed categories are `factual`, `source`, `structure`, `style`, `duplication`, and `other`. The command stores only aggregate metadata and hashes under local runtime data.
 
 ## Failure handling
 
@@ -51,10 +60,10 @@ If generation fails validation, do not bypass validation. Correct the profile, s
 - Review source health and remove persistently irrelevant sources.
 - Sample reports for false claims and weak keyword matches.
 - Run the full test suite and privacy scan after changes.
+- Review anonymized rating and draft/final similarity trends shown by `python -m morning_report doctor`; investigate deterioration, but do not treat similarity as a quality score by itself.
 - Update profiles rather than hard-coding industry rules.
 - Review disk retention and logs; use the cleanup command rather than deleting data ad hoc.
 
 ## Change approval
 
 Local code changes and tests may be prepared without publication. Require the repository owner's approval before pushing, installing a scheduled task, deleting retained user data, publishing a report, or changing repository visibility.
-

@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Create a new industry profile from safe, generic defaults")
+    parser = argparse.ArgumentParser(description="Create a new industry profile skeleton")
     parser.add_argument("profile_id", help="Lowercase letters, digits, and hyphens")
     parser.add_argument("display_name")
     parser.add_argument("--keyword", action="append", required=True, dest="keywords")
@@ -40,19 +40,17 @@ def main() -> int:
             {"title": "供应链与政策", "instructions": "提取供应链、价格、认证或政策变化。"},
         ],
         "category_rules": [],
-        "sources": [
-            {
-                "type": "rss",
-                "name": "Replace with a public source",
-                "url": "https://example.com/feed.xml",
-                "max_items": 30,
-                "category": "industry",
-            }
-        ],
+        "sources": [{
+            "type": "rss",
+            "name": "REPLACE WITH A PUBLIC SOURCE",
+            "url": "https://example.com/feed.xml",
+            "max_items": 30,
+            "category": "industry",
+        }],
     }
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(profile, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(path)
+    print(f"Created {path}. Replace the placeholder source before running collection.")
     return 0
 
 

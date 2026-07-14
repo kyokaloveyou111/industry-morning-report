@@ -1,0 +1,4 @@
+interface:
+  display_name: "Industry Morning Report Operator"
+  short_description: "Run, configure, diagnose, and review morning-report drafts"
+  default_prompt: "Use $industry-morning-report to check my report setup and perform a collection-only dry run."
