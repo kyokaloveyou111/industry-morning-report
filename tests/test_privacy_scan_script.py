@@ -37,6 +37,8 @@ class PrivacyScanScriptTests(unittest.TestCase):
             git(root, "commit", "-m", "safe")
 
             secret = "sk-" + "A" * 32
+            # Synthetic provider-shaped input is required to test the scanner; it is not a credential.
+            # codeql[py/clear-text-storage-sensitive-data]
             path.write_text(f"api_key={secret}\n", encoding="utf-8")
             git(root, "add", "config.txt")
             path.write_text("safe again\n", encoding="utf-8")
@@ -52,6 +54,8 @@ class PrivacyScanScriptTests(unittest.TestCase):
         try:
             path = root / "old.txt"
             secret = "ghp_" + "B" * 32
+            # Synthetic provider-shaped input is required to test the scanner; it is not a credential.
+            # codeql[py/clear-text-storage-sensitive-data]
             path.write_text(secret, encoding="utf-8")
             git(root, "add", "old.txt")
             git(root, "commit", "-m", "old")
