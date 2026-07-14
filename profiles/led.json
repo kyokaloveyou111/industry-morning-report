@@ -1,0 +1,97 @@
+{
+  "id": "led",
+  "display_name": "LED 显示行业",
+  "keywords": [
+    "LED display", "LED screen", "LED video wall", "MicroLED", "Micro LED",
+    "MiniLED", "Mini LED", "dvLED", "digital signage", "DOOH", "COB LED",
+    "LED显示", "LED屏", "显示屏", "小间距", "虚拟拍摄", "数字标牌",
+    "利亚德", "洲明", "艾比森", "雷曼光电", "行家说"
+  ],
+  "minimum_materials": 8,
+  "maximum_prompt_materials": 100,
+  "minimum_citations": 4,
+  "minimum_section_chars": 45,
+  "minimum_report_chars": 600,
+  "maximum_report_chars": 2200,
+  "used_url_retention_days": 7,
+  "snapshot_retention_days": 30,
+  "sections": [
+    {
+      "title": "行业速递",
+      "instructions": "选择 4-6 条最重要动态，区分国内与海外；每条附准确来源链接。"
+    },
+    {
+      "title": "下游应用与需求",
+      "instructions": "选择一个有素材支撑的应用场景，分析需求景气度，不写无依据预测。"
+    },
+    {
+      "title": "产业链延伸",
+      "instructions": "基于具体案例讨论上游、下游或相邻赛道机会，明确事实与判断。"
+    },
+    {
+      "title": "AI × 行业",
+      "instructions": "引用至少一条素材，分析 AI 与显示、制造、内容或运营的结合。"
+    },
+    {
+      "title": "供应链与政策",
+      "instructions": "提取供应、价格、产能、认证、贸易或政策变化，不重复其他板块事件。"
+    }
+  ],
+  "category_rules": [
+    {
+      "category": "AI × 行业",
+      "keywords": ["AI", "人工智能", "AIGC", "智能制造", "machine learning"],
+      "tags": ["ai"]
+    },
+    {
+      "category": "下游应用与需求",
+      "keywords": ["演唱会", "virtual production", "零售", "体育场", "cinema", "DOOH"],
+      "tags": ["application"]
+    },
+    {
+      "category": "供应链与政策",
+      "keywords": ["产能", "关税", "认证", "supply chain", "tariff", "capacity"],
+      "tags": ["supply-chain"]
+    }
+  ],
+  "sources": [
+    {
+      "type": "rss",
+      "name": "Google News LED",
+      "url": "https://news.google.com/rss/search?q=%22LED+display%22+OR+MicroLED+OR+%22Mini+LED%22&hl=en-US&gl=US&ceid=US:en",
+      "max_items": 40,
+      "category": "industry"
+    },
+    {
+      "type": "rss",
+      "name": "AV Magazine",
+      "url": "https://www.avinteractive.com/feed",
+      "max_items": 30,
+      "category": "industry"
+    },
+    {
+      "type": "rss",
+      "name": "Sixteen:Nine",
+      "url": "https://www.sixteen-nine.net/feed",
+      "max_items": 30,
+      "category": "industry"
+    },
+    {
+      "type": "web",
+      "name": "LEDinside",
+      "url": "https://www.ledinside.cn/",
+      "selector": "a[href^='/news/'], a[href^='/research/']",
+      "max_items": 30,
+      "category": "industry"
+    },
+    {
+      "type": "web",
+      "name": "行家说",
+      "url": "https://www.hangjianet.com/",
+      "selector": "a[href^='/topic/']",
+      "max_items": 30,
+      "category": "industry"
+    }
+  ]
+}
+

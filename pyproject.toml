@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "industry-morning-report"
+version = "0.1.0"
+description = "A privacy-safe, configurable industry morning report generator"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+  "requests>=2.31,<3",
+  "beautifulsoup4>=4.12,<5",
+  "feedparser>=6.0,<7",
+  "anthropic>=0.40,<1",
+  "openai>=1.50,<3",
+]
+
+[project.scripts]
+morning-report = "morning_report.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["morning_report*"]
+
