@@ -60,6 +60,7 @@ class ArticleStore:
         self.used_path = data_dir / "used_urls.json"
         self.health_path = data_dir / "source_health.json"
         self.status_path = data_dir / "last_run_status.json"
+        self.review_metrics_path = data_dir / "review_metrics.json"
 
     def set_run_status(self, state: str, message: str = "", report: str = "") -> None:
         atomic_write_json(self.status_path, {

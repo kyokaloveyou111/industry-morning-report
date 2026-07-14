@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+from . import __version__
 from .collector import Collector, deduplicate
 from .config import ConfigError, load_profile, load_runtime
 from .generator import ReportGenerator
@@ -12,6 +13,7 @@ from .lock import RunLock
 from .logging_utils import configure_logging
 from .models import Article
 from .privacy import redact
+from .review_metrics import ALLOWED_CATEGORIES, record_review_metrics, review_summary
 from .storage import ArticleStore, read_json
 
 
@@ -108,6 +110,12 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     if isinstance(status, dict) and status.get("state"):
         print(f"Last run: {status['state']} at {status.get('updated_at', 'unknown time')}")
     print(f"Privacy: API key values are never displayed")
+    quality = review_summary(store.review_metrics_path)
+    if quality["reviews"]:
+        print(
+            f"Human reviews: {quality['reviews']}, average rating {quality['average_rating']}/5, "
+            f"draft/final similarity {quality['average_similarity']}"
+        )
     if issues:
         for issue in issues:
             logger.warning("Doctor: %s", issue)
@@ -123,8 +131,26 @@ def cmd_cleanup(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_record_review(args: argparse.Namespace) -> int:
+    _, _, _, store = _prepare(args)
+    metrics = record_review_metrics(
+        store.review_metrics_path,
+        Path(args.draft),
+        Path(args.final),
+        args.rating,
+        args.category,
+    )
+    print(json.dumps(metrics, ensure_ascii=False, indent=2))
+    print("Only anonymized counts and SHA-256 digests were stored; report text and URLs were not stored.")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Configurable, privacy-safe industry morning report generator")
+    parser = argparse.ArgumentParser(
+        prog="morning-report",
+        description="Configurable, privacy-safe industry morning report generator",
+    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--profile", help="Path to an industry profile JSON file")
     parser.add_argument("--verbose", action="store_true")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -146,6 +172,13 @@ def build_parser() -> argparse.ArgumentParser:
     cleanup = subparsers.add_parser("cleanup", help="Remove expired material snapshots")
     cleanup.add_argument("--days", type=int, help="Override snapshot retention days")
     cleanup.set_defaults(func=cmd_cleanup)
+
+    record_review = subparsers.add_parser("record-review", help="Store anonymized draft/final review metrics")
+    record_review.add_argument("--draft", required=True, help="AI draft Markdown path")
+    record_review.add_argument("--final", required=True, help="Human-reviewed Markdown path")
+    record_review.add_argument("--rating", type=int, choices=range(1, 6), required=True)
+    record_review.add_argument("--category", action="append", choices=sorted(ALLOWED_CATEGORIES), default=[])
+    record_review.set_defaults(func=cmd_record_review)
     return parser
 
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Industry Morning Report Maintainer"
+  short_description: "Develop, secure, test, and release the report system"
+  default_prompt: "Use $industry-morning-report-maintainer to diagnose this repository and prepare a tested, privacy-scanned change."

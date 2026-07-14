@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -30,5 +32,4 @@ jobs:
         run: python -m unittest discover -s tests -v
 
       - name: Scan publishable files for secrets and private data
-        run: python skills/industry-morning-report/scripts/privacy_scan.py .
-
+        run: python .agents/skills/industry-morning-report-maintainer/scripts/privacy_scan.py . --history
